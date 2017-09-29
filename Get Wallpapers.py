@@ -1,75 +1,9 @@
 import urllib.request, re
 finalStringGalleryUrl = "https://wall.alphacoders.com/by_collection.php?id=34"
 finalStringImagePageUrl = "https://wall.alphacoders.com/big.php?i={}"
-finalStringArrayImageTypes = ["jpg", "png", "gif"]
 bitArrayGalleryPagesHTML = []
 intArrayImageId = []
 stringLog = ""
-
-def getGalleryPagesHTML():
-	global stringLog
-	allGalleryPagesScanned = False
-	intGalleryPageIndex = 1
-	while(allGalleryPagesScanned == False):
-		try:
-			print("Downloading Gallery page {}".format(intGalleryPageIndex))
-			with urllib.request.urlopen(finalStringGalleryUrl.format(intGalleryPageIndex)) as f:
-				bitGalleryPageHTML = f.read()
-				stringCheckCorrectGalleryPage = "The Elder Scrolls HD Wallpapers | Backgrounds - Wallpaper Abyss - Page {}".format(intGalleryPageIndex)
-				if (bytearray(stringCheckCorrectGalleryPage, "utf-8") in bitGalleryPageHTML) or (intGalleryPageIndex == 1):
-					bitArrayGalleryPagesHTML.append(bitGalleryPageHTML)
-				else:
-					print("{} gallery pages found".format(intGalleryPageIndex - 1))
-					stringLog += "\n{} gallery pages found".format(intGalleryPageIndex - 1)
-					allGalleryPagesScanned = True
-		except urllib.error.HTTPError:
-			print("{} gallery pages found".format(intGalleryPageIndex - 1))
-			stringLog += "\n{} gallery pages found".format(intGalleryPageIndex - 1)
-		intGalleryPageIndex += 1
-	
-def findImageIDFromAllGalleryPages():
-	queryImageId = re.compile("HD Wallpaper \| Background ID:[0-9]+")
-	for bitGalleryPageHTML in bitArrayGalleryPagesHTML:
-		stringArrayImageId = queryImageId.findall(str(bitGalleryPageHTML))
-		print(stringArrayImageId)
-		for stringImageId in stringArrayImageId:
-			intArrayImageId.append(int(stringImageId.split(":")[1]))
-		
-def downloadImages():
-	global stringLog
-	for intImageId in intArrayImageId:
-		if not imageExists(intImageId):
-			try:
-				downloadJPG(intImageId)
-			except urllib.error.HTTPError:
-				try:
-					downloadPNG(intImageId)
-				except urllib.error.HTTPError:
-					try:
-						downloadGIF(intImageId)
-					except urllib.error.HTTPError:
-						stringLog += "\nImage ID:{} not found".format(intImageId)
-
-def downloadJPG(intImageId):
-	with urllib.request.urlopen(finalStringImageUrlJPG.format(str(intImageId)[:3], intImageId)) as f1:
-		with open("{}.jpg", "wb") as f2:
-			f2.write(f1.read())
-			stringLog += "\n{}.jpg downloaded".format(intImageId)
-						
-def downloadPNG(intImageId):						
-	with urllib.request.urlopen(finalStringImageUrlPNG.format(str(intImageId)[:3], intImageId)) as f1:
-		with open("{}.png", "wb") as f2:
-			f2.write(f1.read())
-			stringLog += "\n{}.png downloaded".format(intImageId)
-
-def downloadGIF(intImageId):
-	with urllib.request.urlopen(finalStringImageUrlGIF.format(str(intImageId)[:3], intImageId)) as f1:
-		with open("{}.gif", "wb") as f2:
-			f2.write(f1.read())
-			stringLog += "\n{}.gif downloaded".format(intImageId)
-
-def redownloadImages():
-	pass
 
 def imageExists(intImageId):
 	global stringLog
