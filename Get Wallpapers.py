@@ -134,6 +134,7 @@ def resetLog():
         os.rename("log_latest.txt", "log_previous.txt")
     except FileNotFoundError:
         pass
+    log("Log Begin:")
 
 
 if __name__ == "__main__":
@@ -161,12 +162,12 @@ if __name__ == "__main__":
                                 gottenUrl = processedUrl[3]
                     if gottenUrl is not None and gottenUrl is not "":
                         stringArrayGalleryUrl.append(gottenUrl)
-                        log("Queued Gallery: {}".format(gottenUrl))
+                        log("\nQueued Gallery: {}".format(gottenUrl))
                 except IndexError:
                     print("Please enter a valid gallery url\n")
         for galleryUrl in stringArrayGalleryUrl:
             stringGalleryUrl = galleryUrl
-            log("Downloading Gallery: {}".format(stringGalleryUrl))
+            log("\nDownloading Gallery: {}".format(stringGalleryUrl))
             getGalleryPagesHTMLIndividual()
     elif choice == 2:
         exit(0)
