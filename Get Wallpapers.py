@@ -120,11 +120,24 @@ def getGalleryPagesHTMLIndividual():
 
 
 def log(stringLog):
-    with open("log.txt", "w") as f:
+    with open("log_latest.txt", "a") as f:
         f.write(stringLog)
 
 
+def resetLog():
+    import os
+    try:
+        os.remove("log_previous.txt")
+    except FileNotFoundError:
+        pass
+    try:
+        os.rename("log_latest.txt", "log_previous.txt")
+    except FileNotFoundError:
+        pass
+
+
 if __name__ == "__main__":
+    resetLog()
     choice = getIntInput("Select Mode:\n1).Download Gallery (One or more)\n2).Exit\n", "Please enter 1 or 2", 2)
     if choice == 1:
         stringArrayGalleryUrl = []
